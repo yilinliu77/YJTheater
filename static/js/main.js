@@ -13,56 +13,33 @@ function getTimeString(vTime) {
     return `${h.toFixed(0)}:${m.toFixed(0)}:${s.toFixed(0)}`;
 }
 
-function switch_local_source(event) {
-    // myPlayer.source = {
-    //     type: 'video',
-    //     sources: [
-    //         {
-    //             src: event.target.value,
-    //             type: 'video/mp4',
-    //         }
-    //     ]
-    // };
-}
 
-function switch_source(content, var2) {
-    let src = "";
-    if ("Local Source" == content) {
-        src = "";
-    }
-    else {
-
-    }
+function switch_source(source_name, source_address) {
     myPlayer.source = {
         type: 'video',
-        title: 'Example title',
+        title: 'source_name',
         sources: [
             {
-                src: '/path/to/movie.mp4',
+                src: source_address,
                 type: 'video/mp4',
-                size: 720,
-            },
-            {
-                src: '/path/to/movie.webm',
-                type: 'video/webm',
-                size: 1080,
-            },
+                // size: 720,
+            }
         ],
-        tracks: [
-            {
-                kind: 'captions',
-                label: 'English',
-                srclang: 'en',
-                src: '/path/to/captions.en.vtt',
-                default: true,
-            },
-            {
-                kind: 'captions',
-                label: 'French',
-                srclang: 'fr',
-                src: '/path/to/captions.fr.vtt',
-            },
-        ],
+        // tracks: [
+        //     {
+        //         kind: 'captions',
+        //         label: 'English',
+        //         srclang: 'en',
+        //         src: '/path/to/captions.en.vtt',
+        //         default: true,
+        //     },
+        //     {
+        //         kind: 'captions',
+        //         label: 'French',
+        //         srclang: 'fr',
+        //         src: '/path/to/captions.fr.vtt',
+        //     },
+        // ],
     };
 
 }
@@ -79,23 +56,17 @@ function login() {
     Player callback function
     */
     myPlayer.on('pause', function () {
-        if (ignoreListenerOnce) {
-            ignoreListenerOnce = false;
-            return
-        }
+        if (myPlayer.seeking)
+            return;
         mySocket.emit("pause", { "nickname": nickname });
     });
     myPlayer.on('play', function () {
-        if (!myPlayer.seeking) {
-            if (ignoreListenerOnce) {
-                ignoreListenerOnce = false;
-                return
-            }
-            mySocket.emit("play", { "nickname": nickname });
-        }
+        if (myPlayer.seeking) 
+            return;
+        mySocket.emit("play", { "nickname": nickname });
     });
     myPlayer.on('seeked', function () {
-        //mySocket.emit("play", { "nickname": nickname });
+        // mySocket.emit("play", { "nickname": nickname });
     });
 
     /*
@@ -134,14 +105,14 @@ function login() {
     });
     mySocket.on('play', function (msg) {
         if (msg["nickname"] != nickname) {
-            ignoreListenerOnce = true;
+            // ignoreListenerOnce = true;
             myPlayer.play();
             showToast(`${msg["nickname"]} has played the video`);
         }
     });
     mySocket.on('pause', function (msg) {
         if (msg["nickname"] != nickname) {
-            ignoreListenerOnce = true;
+            // ignoreListenerOnce = true;
             myPlayer.pause();
             showToast(`${msg["nickname"]} has paused the video`);
         }

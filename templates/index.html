@@ -8,8 +8,8 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script src="static/js/jquery.js"></script>
-    <script src="https://cdn.plyr.io/3.5.10/plyr.js"></script>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.5.10/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.2/plyr.js"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.2/plyr.css" />
     <!-- <link href="static/css/video-js.css" rel="stylesheet" /> -->
     <link href="static/css/main.css" rel="stylesheet" />
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
@@ -30,8 +30,13 @@
     <div class="container">
         <div class="row center-block">
             <video id="player">
-                <source src="file:///D:/1080p.mp4" type="video/mp4" />
+                <source src="http://127.0.0.1:8080/1080p.mp4" type="video/mp4" />
                 <!-- <track kind='captions' src="static/caption.vtt" label="Double" default /> -->
+                <!-- {% for sourse_item in sources%} -->
+                <!-- <source src={{sourse_item.source}} type="video/mp4" /> -->
+                <!-- <button class="btn btn-secondary m-2" onclick="switch_source(this.innerText,this.id)" -->
+                <!-- id={{sourse_item.source}}>{{sourse_item.name}}</button> -->
+                <!-- {% endfor %} -->
             </video>
         </div>
 
@@ -44,15 +49,17 @@
                 <div class="center-block " id="sources">
 
                     {% for sourse_item in sources%}
-                    <button class="btn btn-secondary m-2"
-                        id={{sourse_item.source}}>{{sourse_item.name}}</button>
+                    <button class="btn btn-secondary m-2" id={{sourse_item.source}}
+                        onclick="switch_source(this.innerText, this.id)">
+                        {{sourse_item.name}}
+                    </button>
                     <!-- <button class="btn btn-secondary m-2" onclick="switch_source(this.innerText,this.id)" -->
-                        <!-- id={{sourse_item.source}}>{{sourse_item.name}}</button> -->
-                        
+                    <!-- id={{sourse_item.source}}>{{sourse_item.name}}</button> -->
                     {% endfor %}
-                    <input type="file" id="btn_file" style="display:none" onchange="switch_local_source(event)">
-                    <button class="btn btn-secondary m-2" onclick="document.getElementById('btn_file').click()"
-                        id="local">Local Source</button>
+
+                    <!-- <input type="file" id="btn_file" style="display:none" onchange="switch_local_source(event)"> -->
+                    <!-- <button class="btn btn-secondary m-2" onclick="document.getElementById('btn_file').click()" -->
+                    <!-- id="local">Local Source</button> -->
                 </div>
             </div>
             <div class="col-lg-8 align-self-center">
@@ -96,6 +103,17 @@
                 <button button class="btn btn-primary" onclick="vote()">投票</button>
                 <!--<input type="button" value="投票" onclick="vote()">-->
             </div>
+
+
+        </div>
+        <div class="col-lg-12 align-self-center text-center">
+
+            <p> If you want to use the local source; </p>
+            <p> 1. pip install Twisted; </p>
+            <p> 2. Navigate to the folder which contains a '1080p.mp4' file </p>
+            <p> 3. twistd -no web --path=. </p>
+            <p> 4. Click local source </p>
+
         </div>
     </div>
 
