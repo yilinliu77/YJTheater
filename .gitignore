@@ -1,0 +1,7 @@
+*.mp4
+*.srt
+.vscode
+.idea
+
+*__pycache__*/
+bash.exe.stackdump
