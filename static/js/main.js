@@ -58,11 +58,21 @@ function login() {
     myPlayer.on('pause', function () {
         if (myPlayer.seeking)
             return;
+        if (ignoreListenerOnce)
+        {
+            ignoreListenerOnce = false;
+            return;
+        }
         mySocket.emit("pause", { "nickname": nickname });
     });
     myPlayer.on('play', function () {
         if (myPlayer.seeking) 
             return;
+        if (ignoreListenerOnce)
+        {
+            ignoreListenerOnce = false;
+            return;
+        }
         mySocket.emit("play", { "nickname": nickname });
     });
     myPlayer.on('seeked', function () {
@@ -105,14 +115,14 @@ function login() {
     });
     mySocket.on('play', function (msg) {
         if (msg["nickname"] != nickname) {
-            // ignoreListenerOnce = true;
+            ignoreListenerOnce = true;
             myPlayer.play();
             showToast(`${msg["nickname"]} has played the video`);
         }
     });
     mySocket.on('pause', function (msg) {
         if (msg["nickname"] != nickname) {
-            // ignoreListenerOnce = true;
+            ignoreListenerOnce = true;
             myPlayer.pause();
             showToast(`${msg["nickname"]} has paused the video`);
         }
