@@ -1,0 +1,39 @@
+server {
+	listen 5001 default_server;
+	#listen [::]:80 default_server;
+
+	server_name llsevenr.cn www.llsevenr.cn;
+
+	location / {
+		include uwsgi_params;
+		# uwsgi_pass unix:/root/www/YJTheater/app.sock;
+		uwsgi_pass 127.0.0.1:5002;
+	}
+
+	location /static/ {
+		root /root/www/YJTheater/;
+		# autoindex on;
+	}
+
+	
+}
+
+
+# Virtual Host configuration for example.com
+#
+# You can move that to a different file under sites-available/ and symlink that
+# to sites-enabled/ to enable it.
+#
+#server {
+#	listen 80;
+#	listen [::]:80;
+#
+#	server_name example.com;
+#
+#	root /var/www/example.com;
+#	index index.html;
+#
+#	location / {
+#		try_files $uri $uri/ =404;
+#	}
+#}

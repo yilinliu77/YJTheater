@@ -3,6 +3,7 @@ import socketio
 from json import *
 
 sio = socketio.Server(async_mode='threading')
+# sio = socketio.Server()
 app = Flask(__name__)
 app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
 
@@ -52,7 +53,6 @@ def index():
 def test():
     return "test"
 
-
 @sio.on('register')
 def register(sid, msg):
     users.append({"nickname": msg["nickname"], "time": 0})
@@ -68,17 +68,17 @@ def timeReport(sid, msg):
 @sio.on('synchronize')
 def synchronize(sid, msg):
     sio.emit("synchronizeYourself", {
-             "time": msg["time"], "nickname": msg["nickname"]})
+             "time": msg["time"], "nickname": msg["nickname"]}, skip_sid=sid)
 
 
 @sio.on('play')
 def play(sid, msg):
-    sio.emit("play", {"nickname": msg["nickname"]})
+    sio.emit("play", {"nickname": msg["nickname"]}, skip_sid=sid)
 
 
 @sio.on('pause')
 def pause(sid, msg):
-    sio.emit("pause", {"nickname": msg["nickname"]})
+    sio.emit("pause", {"nickname": msg["nickname"]}, skip_sid=sid)
 
 
 @sio.on('vote')
@@ -89,6 +89,6 @@ def vote(sid, msg):
 
 
 if __name__ == "__main__":
-
-    # app.run(threaded=True)
-    app.run(host="0.0.0.0", port=5001, threaded=True)
+    app.run(threaded=True,port=5002)
+    # app.run(host="0.0.0.0",port=5001, threaded=True)
+    # app.run(host="172.17.15.48",port=5003, threaded=True)

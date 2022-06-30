@@ -45,10 +45,34 @@ function switch_source(source_name, source_address) {
 }
 
 function login() {
+    const socket = io();
+    
+    socket.on('connect', function() {
+        console.log("Connected to WS server");
+        console.log(socket.connected); 
+    });
+
+    socket.on("connect_error", () => {
+        // revert to classic upgrade
+        console.log("Connected failed");
+        socket.io.opts.transports = ["polling", "websocket"];
+    });
+    
+    return;
+
+    if (!socket.connected)
+    {
+        
+        alert("Cannot connect to server");
+        // return;
+    }
     nickname = prompt("A Nickname?");
     alert("Welcome " + nickname);
 
-    mySocket = io.connect();
+    mySocket = io.connect("http://www.llsevenr.cn:5003/");
+   
+    console.log(mySocket.id);
+
     // myPlayer = videojs('player');
     myPlayer = new Plyr('#player');
 

@@ -1,0 +1,1 @@
+ffmpeg -i 1.mkv -c:v libx264 -crf 20 -c:a copy 1080p.mp4
