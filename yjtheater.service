@@ -1,0 +1,14 @@
+# /etc/systemd/system/yjtheater.service
+[Unit]
+Description=uWSGI instance to serve myproject
+After=network.target
+
+[Service]
+User=root
+#Group=www-data
+WorkingDirectory=/root/www/YJTheater
+#Environment="PATH=/home/sammy/myproject/myprojectenv/bin"
+ExecStart=/usr/bin/python3 app.py
+
+[Install]
+WantedBy=multi-user.target

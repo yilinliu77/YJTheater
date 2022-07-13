@@ -1,11 +1,20 @@
 from flask import Flask, render_template, request
-import socketio
+
+# import socketio
+from flask_socketio import SocketIO
+
 from json import *
 
-sio = socketio.Server(async_mode='threading')
-# sio = socketio.Server()
+
+
 app = Flask(__name__)
-app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
+
+sio = SocketIO(app)
+# sio = socketio.Server(async_mode='gevent')
+# sio = socketio.Server(async_mode='threading')
+# sio = socketio.Server()
+
+# app.wsgi_app = socketio.WSGIApp(sio, app.wsgi_app)
 
 users = []
 room = None
@@ -54,41 +63,42 @@ def test():
     return "test"
 
 @sio.on('register')
-def register(sid, msg):
+def register( msg):
     users.append({"nickname": msg["nickname"], "time": 0})
-    sio.emit("registerUsers", dumps(users))
+    sio.emit("registerUsers", dumps(users), broadcast=True, include_self=True)
 
 
 @sio.on('timeReport')
-def timeReport(sid, msg):
+def timeReport( msg):
     sio.emit("timeReport", {
-             "time": msg["time"], "nickname": msg["nickname"]})
+             "time": msg["time"], "nickname": msg["nickname"]}, broadcast=True, include_self=True)
 
 
 @sio.on('synchronize')
-def synchronize(sid, msg):
+def synchronize(msg):
     sio.emit("synchronizeYourself", {
-             "time": msg["time"], "nickname": msg["nickname"]}, skip_sid=sid)
+             "time": msg["time"], "nickname": msg["nickname"]}, broadcast=True, include_self=False)
 
 
 @sio.on('play')
-def play(sid, msg):
-    sio.emit("play", {"nickname": msg["nickname"]}, skip_sid=sid)
+def play(msg):
+    sio.emit("play", {"nickname": msg["nickname"]}, broadcast=True, include_self=False)
 
 
 @sio.on('pause')
-def pause(sid, msg):
-    sio.emit("pause", {"nickname": msg["nickname"]}, skip_sid=sid)
+def pause(msg):
+    sio.emit("pause", {"nickname": msg["nickname"]}, broadcast=True, include_self=False)
 
 
 @sio.on('vote')
-def vote(sid, msg):
+def vote(msg):
     votenum[str(msg)]["count"] += 1
     sio.emit("display_vote", votenum)
     pass
 
 
 if __name__ == "__main__":
-    app.run(threaded=True,port=5002)
+    # app.run(threaded=True,port=5002)
     # app.run(host="0.0.0.0",port=5001, threaded=True)
-    # app.run(host="172.17.15.48",port=5003, threaded=True)
+    # app.run(host="0.0.0.0",port=5003, threaded=True)
+    sio.run(app, host="0.0.0.0", port=5003)

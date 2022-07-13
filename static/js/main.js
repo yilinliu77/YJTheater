@@ -45,33 +45,21 @@ function switch_source(source_name, source_address) {
 }
 
 function login() {
-    const socket = io();
+    mySocket = io();
     
-    socket.on('connect', function() {
+    mySocket.on('connect', function() {
         console.log("Connected to WS server");
-        console.log(socket.connected); 
+        console.log(mySocket.connected); 
+        console.log(mySocket.id);
     });
 
-    socket.on("connect_error", () => {
+    mySocket.on("connect_error", () => {
         // revert to classic upgrade
         console.log("Connected failed");
-        socket.io.opts.transports = ["polling", "websocket"];
     });
     
-    return;
-
-    if (!socket.connected)
-    {
-        
-        alert("Cannot connect to server");
-        // return;
-    }
     nickname = prompt("A Nickname?");
     alert("Welcome " + nickname);
-
-    mySocket = io.connect("http://www.llsevenr.cn:5003/");
-   
-    console.log(mySocket.id);
 
     // myPlayer = videojs('player');
     myPlayer = new Plyr('#player');
@@ -82,21 +70,21 @@ function login() {
     myPlayer.on('pause', function () {
         if (myPlayer.seeking)
             return;
-        if (ignoreListenerOnce)
-        {
-            ignoreListenerOnce = false;
-            return;
-        }
+        // if (ignoreListenerOnce)
+        // {
+            // ignoreListenerOnce = false;
+            // return;
+        // }
         mySocket.emit("pause", { "nickname": nickname });
     });
     myPlayer.on('play', function () {
         if (myPlayer.seeking) 
             return;
-        if (ignoreListenerOnce)
-        {
-            ignoreListenerOnce = false;
-            return;
-        }
+        // if (ignoreListenerOnce)
+        // {
+            // ignoreListenerOnce = false;
+            // return;
+        // }
         mySocket.emit("play", { "nickname": nickname });
     });
     myPlayer.on('seeked', function () {

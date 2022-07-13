@@ -5,9 +5,11 @@ server {
 	server_name llsevenr.cn www.llsevenr.cn;
 
 	location / {
-		include uwsgi_params;
+		# include uwsgi_params;
+		include proxy_params;
 		# uwsgi_pass unix:/root/www/YJTheater/app.sock;
-		uwsgi_pass 127.0.0.1:5002;
+		# uwsgi_pass 127.0.0.1:5002;
+		proxy_pass http://127.0.0.1:5003;
 	}
 
 	location /static/ {
@@ -15,6 +17,14 @@ server {
 		# autoindex on;
 	}
 
+	location /socket.io {
+        include proxy_params;
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_pass http://127.0.0.1:5003/socket.io;
+    }
 	
 }
 
