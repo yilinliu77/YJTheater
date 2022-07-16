@@ -20,10 +20,10 @@ users = []
 room = None
 
 video_list = [
-    {"name":"CN.1080P","source":"static/1080p.mp4"},
-    {"name":"Local Source (8000)","source":"http://127.0.0.1:8080/1080p.mp4"},
-    # {"name":"CN.720P","source":"static/720p.mp4"},
-    # {"name":"CN.480P","source":"static/480p.mp4"},
+    {"name":"CN.720P","source":"static/720p.mp4"},
+    {"name":"SZU 2K","source":"http://172.31.178.220:8080/1080p.mp4"},
+    {"name":"SZU 4K","source":"http://172.31.178.220:8080/2160p.mp4"},
+    {"name":"PC Source (8000)","source":"http://127.0.0.1:8080/video.mp4"},
 ]
 
 votenum = {
