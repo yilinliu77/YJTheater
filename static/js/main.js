@@ -150,6 +150,18 @@ function login() {
         }
     });
 
+
+    //显示队列
+    mySocket.on("display_queue", function (msg) {
+        var table_root = document.getElementById("queue_table");
+        for (var i = 4; i < table_root.firstElementChild.childNodes.length; i += 2) {
+            var row_node = table_root.firstElementChild.childNodes[i];
+            var key = row_node.childNodes[3].innerText;
+            row_node.childNodes[7].firstElementChild.innerText = msg[key]["count"];
+        }
+    });
+
+
     mySocket.emit("register", { "nickname": nickname });
 
     countFunc = self.setInterval(function () {

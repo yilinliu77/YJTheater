@@ -20,6 +20,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- <script src="static/js/videojs-ie8.min.js"></script> -->
     <script src="static/js/main.js"></script>
+    <!--<script src="static/js/vote.js"></script>-->
+    <script type="text/javascript" src="static/js/queue.js"></script>
     <!-- <script src="static/js/socket.io.js"></script> -->
     <script src="https://cdn.socket.io/4.3.1/socket.io.min.js"></script>
 
@@ -78,6 +80,8 @@
     <div id="snackbar">Some text some message..</div>
 
     <div class="container">
+        <!--
+        VOTE
         <div class="col-lg-5 align-self-center text-center">
             <h3>投票区</h3>
             <table class="table table-borderless" id="vote_table">
@@ -101,12 +105,103 @@
                 {%endfor%}
             </table>
             <div class="col-lg-3 align-self-center text-center">
+                <script src="../static/js/vote.js"></script>
                 <button button class="btn btn-primary" onclick="vote()">投票</button>
-                <!--<input type="button" value="投票" onclick="vote()">-->
             </div>
-
-
         </div>
+
+        -->
+
+
+        <div class="col-lg-5 align-self-center text-center">
+            <script src="static/js/vote.js"></script>
+            <h3>将要成为栈的队列</h3>
+            <table class="table table-borderless" id="queue_table">
+                <tr>
+                    <td colspan="3" style="text-align: center;">今天看什么呢</td>
+
+                </tr>
+                <tr>
+                    <td>排序</td>
+                    <td>电影</td>
+                    <td>类型</td>
+                    <td>播放周(暂时没用)</td>
+                    <td>推荐人</td>
+                </tr>
+                {%for vote_item in video_queue%}
+                <tr>
+                    <td>{{vote_item}}</td>
+                    <td>{{video_queue[vote_item]["name"]}}</td>
+                    <td></span>{{video_queue[vote_item]["videotype"]}}</td>
+                    <td>{{video_queue[vote_item]["showtime"]}}</td>
+                    <td>{{video_queue[vote_item]["holdername"]}}</td>
+                    <!--
+
+                    <td><span id="span1"></span>{{video_queue[vote_item]["vtype"]}}</span></td>
+                    <td><span id="span2">{{video_queue[vote_item]["showtime"]}}</span></td>
+                    <td><span id="span3">{{video_queue[vote_item]["holdername"]}}</span></td>
+                    -->
+                </tr>
+                {%endfor%}
+            </table>
+            <button button class="btn btn-primary" onclick="pop()">POP~</button>
+            <script>
+                function pop() {
+                    mySocket = io.connect();
+                    mySocket.emit('popqueue', null);
+
+                    alert("pop");
+                }
+            </script>
+        </div>
+        
+
+<body>
+    <h1>我有想看的电影</h1>
+    <form action="http://127.0.0.1:5000/inqueue/" method="post" enctype="multipart/form-data">
+        <p>
+            <label for="holdername">我是</label>  <!--label和input通过id绑定在一起-->
+            <input type="text" name="holdername" placeholder="潘四四" id="holdername">
+        </p>                                     <!--placeholder 输入框默认显示的值-->
+        <p>
+            <label for="videoname">我想看的电影是</label>  <!--label和input通过id绑定在一起-->
+            <input type="text" name="videoname" placeholder="去去想看的电影" id="videoname">
+        </p>                                     <!--placeholder 输入框默认显示的值-->
+        <p>
+            <label for="videotype">类型：</label>
+            <input type="checkbox" name="videotype" value=1 checked>开心
+            <input type="checkbox" name="videotype" value=2>伤心
+            <input type="checkbox" name="videotype" value=3>生气
+            <input type="checkbox" name="videotype" value=0>其他
+        </p>
+        <p>
+            <label for="birthday">预定时间：</label>
+            <input type="week" name="showtime" id="showtime">
+        </p>
+        <label for="description">描述一下：</label>
+        <p>
+            <textarea name="description" id="description" cols="50" rows="3"></textarea>
+        </p>
+        <p>
+            <input type="submit" value="PUSH~">
+        </p>
+        <!--
+        <p>
+            <label>性别：</label>
+            <input type="radio" name="gender"  value="male" checked>男  
+            <input type="radio" name="gender"  value="female" >女
+            <input type="radio" name="gender"  value="security">保密
+        </p>
+        <p>
+            <label for="avatar">头像：</label>
+            <input type="file" name="avatar" id="avatar">
+        </p>
+        -->
+    </form>
+
+</body>
+
+
         <div class="col-lg-12 align-self-center text-center">
 
             <p> If you want to use the local source; </p>
@@ -123,7 +218,7 @@
     -->
 
     <!-- <script src="static/js/video.js"></script> -->
-    <script src="static/js/vote.js"></script>
+    <!-- <script src="../static/js/vote.js"></script> -->
 </body>
 
 </html>
