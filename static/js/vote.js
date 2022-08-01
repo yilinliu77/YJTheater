@@ -29,7 +29,7 @@ function vote() {
     }
 
     if(selectItem<=0){
-        alert("请先选择你想看的电影");
+        alert("请先选择你想看的电影111");
         return;
     }
 
@@ -72,3 +72,5 @@ function vote() {
     // }
 
 }
+
+
